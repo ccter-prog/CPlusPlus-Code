@@ -1,4 +1,4 @@
-#ifndef __Menu_H__
+﻿#ifndef __Menu_H__
 #define __Menu_H__
 
 #include <string>
@@ -152,7 +152,7 @@ void Menu<T>::LinkedListAPI_select()
                 }
                 case 6:
                 {
-                    std::cout << "退出程序，删除链表..." << "\n";
+                    std::cout << "退出程序..." << "\n";
                     control = false;
                     break;
                 }

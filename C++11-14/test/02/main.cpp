@@ -1,13 +1,13 @@
-#include "Menu.h"
+﻿#include "Menu.h"
 
 int main(void)
 {
     bool control = true;
     do
     {
-        int select = 4;
-        std::cout << "1.整型 2.浮点型 3.字符型 4.退出，请选择要存储的链表类型：";
-        std::cin >> select;
+        int select = 3;
+        //std::cout << "1.整型 2.浮点型 3.字符型 4.退出，请选择要存储的链表类型：";
+        //std::cin >> select;
         try
         {
             switch (select)
