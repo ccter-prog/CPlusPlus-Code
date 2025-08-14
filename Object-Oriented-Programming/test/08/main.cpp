@@ -1,7 +1,7 @@
 #include <iostream>
 #include "pList.h"
 
-int main(void)
+int main()
 {
     int control = 1;
     std::string str;
