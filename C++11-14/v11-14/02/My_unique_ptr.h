@@ -13,7 +13,7 @@ class My_unique_ptr
             obj.ptr = nullptr;
         }
 
-        My_unique_ptr& operator=(My_unique_ptr&& obj)
+        My_unique_ptr& operator=(My_unique_ptr&& obj) noexcept
         {
             if (this != &obj)
             {
@@ -29,7 +29,7 @@ class My_unique_ptr
         My_unique_ptr& operator=(const My_unique_ptr&) = delete;
     public:
         T* get() const { return ptr; }
-        T* release() const 
+        T* release()
         {
             T* temp = ptr;
             ptr = nullptr;
@@ -40,9 +40,9 @@ class My_unique_ptr
             delete ptr;
             ptr = nullptr;
         }
-        void reset(const T* obj)
+        void reset(T* obj)
         {
-            if (this != obj)
+            if (ptr != obj)
             {
                 delete ptr;
                 ptr = obj;
