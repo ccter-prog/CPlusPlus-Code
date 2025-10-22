@@ -17,5 +17,5 @@ inline void target(int&& a, std::string&& b)
 template <typename T1, typename T2>
 void forwardTwo(T1&& a, T2&& b)
 {
-    target(std::forward<T1>(target), std::forward<T2>(target));
+    target(std::forward<T1>(a), std::forward<T2>(b));
 }
