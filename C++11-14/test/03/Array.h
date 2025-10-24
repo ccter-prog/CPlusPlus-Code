@@ -1,110 +1,109 @@
 #ifndef __Array_H__
 #define __Array_H__
 
+template <typename T>
 class Array
 {
     public:
-        Array();
-        Array(const int Array_size);
-        Array(const Array &obj);
-        int &operator [](int index);
-        int &operator *();
-        int &operator *(const int &p);
-        friend int *operator +(Array &obj, const int num);
-        Array &operator =(Array &obj);
-        friend bool operator ==(const Array &obj1, const Array &obj2);
-        Array &push_back(const int num);
-        int length(const Array &obj);
+        // 以下为特殊成员函数
+        Array() : m_arr(nullptr), m_size(1), m_index(0) {}
+        Array(const T yuansu);
+        Array(const Array& obj);
         virtual ~Array();
+        
+        // 以下为运算符重载
+        T& operator[](int index) { return m_arr[index]; }
+        T& operator*() { return m_arr[0]; }
+        T& operator*(const int& p) { return m_arr[p]; }
+        Array& operator=(Array& obj);
+        bool operator==(const Array& obj);
+    public:
+        // 以下为普通函数
+        Array& push_back(const T num);
+        int length(const Array& obj) { return obj.m_size; }
     private:
-        int *arr;
-        int size;
-        int index;
+        T* m_arr;
+        int m_size;
+        int m_index;
 };
 
-inline Array::Array() : arr(nullptr), size(0), index(0)
-{}
-
-inline Array::Array(const int Array_size) : arr(nullptr), size(Array_size), index(0)
+template <typename T>
+inline Array<T>::Array(const T yuansu) : m_arr(nullptr), m_size(1), m_index(0)
 {
-    arr = new int[Array_size];
+    push_back(yuansu);
 }
 
-inline Array::Array(const Array &obj)
+template <typename T>
+inline Array<T>::Array(const Array<T>& obj)
 {
-    size = obj.size;
-    index = obj.index;
-    arr = new int[size];
-    for (int i = 0; i < size; i++)
+    m_size = obj.m_size;
+    m_index = obj.m_index;
+    m_arr = new T[(unsigned long)m_size];
+    for (int i = 0; i < m_size; i++)
     {
-        arr[i] = obj.arr[i];
+        m_arr[i] = obj.m_arr[i];
     }
 }
 
-inline int &Array::operator [](int index)
+template <typename T>
+inline Array<T>& Array<T>::operator=(Array<T>& obj)
 {
-    return arr[index];
-}
-
-inline int &Array::operator *()
-{
-    return arr[0];
-}
-
-inline int &Array::operator *(const int &p)
-{
-    return arr[p];
-}
-
-inline Array &Array::operator =(Array &obj)
-{
-    if (obj.arr)
+    if (obj.m_arr)
     {
-        delete[] arr;
-        obj.arr = nullptr;
+        delete[] m_arr;
+        obj.m_arr = nullptr;
     }
-    obj.size = size;
-    obj.arr = new int[obj.size];
-    for (int i = 0; i < size; i++)
+    obj.m_size = m_size;
+    obj.m_arr = new T[(unsigned long)obj.m_size];
+    for (int i = 0; i < m_size; i++)
     {
-        obj.arr[i] = arr[i];
+        obj.m_arr[i] = m_arr[i];
     }
     return *this;
 }
 
-inline Array &Array::push_back(const int num)
+template <typename T>
+inline Array<T>& Array<T>::push_back(const T num)
 {
-    if (!arr || index == size)
+    if (!m_arr || m_index == m_size)
     {
-        int *p = arr;
-        size *= 2;
-        arr = new int[size];
-        for (int i = 0; i < size; i++)
+        T* p = m_arr;
+        m_size *= 2;
+        m_arr = new T[(unsigned long)m_size];
+        for (int i = 0; p && i < m_size; i++)
         {
-            arr[i] = p[i];
+            m_arr[i] = p[i];
         }
         delete[] p;
     }
-    else
-    {
-        arr[index] = num;
-        index++;
-    }
+    m_arr[m_index] = num;
+    m_index++;
     return *this;
 }
 
-inline int Array::length(const Array &obj)
+template <typename T>
+inline bool Array<T>::operator==(const Array<T>& obj)
 {
-    return obj.size;
+    bool ret = true;
+    for (int i = 0; m_index == obj.m_index && i < m_index; i++)
+    {
+        if (m_arr[i] != obj.m_arr[i])
+        {
+            ret = false;
+            break;
+        }
+    }
+    return ret;
 }
 
-inline Array::~Array()
+template <typename T>
+inline Array<T>::~Array()
 {
-    if (arr)
+    if (m_arr)
     {
-        delete[] arr;
+        delete[] m_arr;
     }
-    arr = nullptr;
+    m_arr = nullptr;
 }
 
 #endif
