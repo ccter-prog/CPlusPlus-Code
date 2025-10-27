@@ -9,6 +9,7 @@ template <typename T>
 class Array
 {
     public:
+        // 类型别名
         using iterator = T*;
         using const_iterator = const T*;
     public:
@@ -29,6 +30,15 @@ class Array
         Array& push_back(const T value);
         size_t length() { return m_size; }
         iterator begin() { return m_data.get(); }
+        iterator end() { return m_data.get() + m_size; }
+        const_iterator begin() const { return m_data.get(); }
+        const_iterator end() const { return m_data.get() + m_size; }
+        const_iterator cbegin() const { return m_data.get(); }
+        const_iterator cend() const { return m_data.get() + m_size; }
+    public:
+        // 模板函数
+        template <typename... Args>
+        T& emplace_back(Args&&... args);
     private:
         void reserve(size_t new_capacity);
     private:
@@ -141,6 +151,19 @@ inline Array<T>& Array<T>::operator=(Array&& other) noexcept
         other.m_size = 0;
     }
     return *this;
+}
+
+template <typename T>
+template <typename... Args>
+inline T& Array<T>::emplace_back(Args&&... args)
+{
+    if (!m_data || m_size == m_capacity)
+    {
+        reserve(m_capacity * 2);
+    }
+    new(&m_data[m_size]) T(std::forward<T>(args)...);
+    m_size++;
+    return m_data[m_size - 1];
 }
 
 #endif
