@@ -9,6 +9,9 @@ template <typename T>
 class Array
 {
     public:
+        using iterator = T*;
+        using const_iterator = const T*;
+    public:
         // 以下为特殊成员函数
         Array() : m_data(nullptr), m_capacity(1), m_size(0) {}
         Array(const T value) : m_data(nullptr), m_capacity(1), m_size(0) { push_back(value); }
@@ -25,6 +28,7 @@ class Array
         // 以下为普通函数
         Array& push_back(const T value);
         size_t length() { return m_size; }
+        iterator begin() { return m_data.get(); }
     private:
         void reserve(size_t new_capacity);
     private:
