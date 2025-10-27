@@ -13,12 +13,14 @@ class Array
         Array() : m_data(nullptr), m_capacity(1), m_size(0) {}
         Array(const T value) : m_data(nullptr), m_capacity(1), m_size(0) { push_back(value); }
         Array(const Array& obj);
+        Array(Array&& other) noexcept;
         ~Array() {}
         
         // 以下为运算符重载
         T& operator[](size_t index) { return m_data[index]; }
         Array& operator=(const Array& obj);
-        bool operator==(const Array& obj);
+        bool operator==(const Array& obj) const;
+        Array& operator=(Array&& other) noexcept;
     public:
         // 以下为普通函数
         Array& push_back(const T value);
@@ -39,6 +41,13 @@ inline Array<T>::Array(const Array<T>& obj) : m_data(nullptr), m_size(obj.m_size
     {
         m_data[i] = obj.m_data[i];
     }
+}
+
+template <typename T>
+inline Array<T>::Array(Array&& other) noexcept : m_data(std::move(other.m_data)), m_capacity(other.m_capacity), m_size(other.m_size)
+{
+    other.m_capacity = 0;
+    other.m_size = 0;
 }
 
 template <typename T>
@@ -67,7 +76,7 @@ inline Array<T>& Array<T>::push_back(const T value)
 }
 
 template <typename T>
-inline bool Array<T>::operator==(const Array<T>& obj)
+inline bool Array<T>::operator==(const Array<T>& obj) const
 {
     bool ret = true;
     if (m_size != obj.m_size)
@@ -114,6 +123,20 @@ inline void Array<T>::reserve(size_t new_capacity)
     }
     m_data.swap(new_data);
     m_capacity = new_capacity;
+}
+
+template <typename T>
+inline Array<T>& Array<T>::operator=(Array&& other) noexcept
+{
+    if (this != &other)
+    {
+        m_data = std::move(other.m_data);
+        m_capacity = other.m_capacity;
+        m_size = other.m_size;
+        other.m_capacity = 0;
+        other.m_size = 0;
+    }
+    return *this;
 }
 
 #endif

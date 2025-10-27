@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-void print()
+inline void print()
 {}
 
 template <typename T, typename... types>
@@ -11,8 +11,6 @@ void print(T a, const types &...args)
 {
     std::cout << a << "\n";
     print(args...);
-    nullptr;
-    char a;
 }
 
 #endif
