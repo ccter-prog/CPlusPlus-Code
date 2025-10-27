@@ -35,6 +35,7 @@ class Array
         const_iterator end() const { return m_data.get() + m_size; }
         const_iterator cbegin() const { return m_data.get(); }
         const_iterator cend() const { return m_data.get() + m_size; }
+        void erase(size_t index);
     public:
         // 模板函数
         template <typename... Args>
@@ -164,6 +165,20 @@ inline T& Array<T>::emplace_back(Args&&... args)
     new(&m_data[m_size]) T(std::forward<T>(args)...);
     m_size++;
     return m_data[m_size - 1];
+}
+
+template <typename T>
+inline void Array<T>::erase(size_t index)
+{
+    if (index >= m_size)
+    {
+        return;
+    }
+    for (size_t i = index; i < m_size - 1; i++)
+    {
+        m_data[i] = std::move(m_data[i + 1]);
+    }
+    m_size--;
 }
 
 #endif
