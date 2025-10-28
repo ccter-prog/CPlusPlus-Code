@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <memory>
 #include <utility>
+#include <initializer_list>
 
 template <typename T>
 class Array
@@ -18,6 +19,7 @@ class Array
         Array(const T value) : m_data(nullptr), m_capacity(1), m_size(0) { push_back(value); }
         Array(const Array& obj);
         Array(Array&& other) noexcept;
+        Array(const std::initializer_list<T>& value) : m_data(nullptr), m_capacity(1), m_size(0) { push_back(value); }
         ~Array() {}
         
         // 以下为运算符重载
@@ -36,6 +38,8 @@ class Array
         const_iterator cbegin() const { return m_data.get(); }
         const_iterator cend() const { return m_data.get() + m_size; }
         void erase(size_t index);
+        void resize(size_t new_size, const T& value = T());
+        Array& push_back(const std::initializer_list<T>& value);
     public:
         // 模板函数
         template <typename... Args>
@@ -87,6 +91,28 @@ inline Array<T>& Array<T>::push_back(const T value)
     }
     m_data[m_size] = value;
     m_size++;
+    return *this;
+}
+
+template <typename T>
+inline Array<T>& Array<T>::push_back(const std::initializer_list<T>& value)
+{
+    size_t temp_size = 0;
+    for (auto i : value)
+    {
+        temp_size++;
+    }
+    if (!m_data || temp_size + m_size > m_capacity)
+    {
+        reserve(temp_size);
+    }
+    size_t i = m_size;
+    for (auto j : value)
+    {
+        m_data[i] = *j;
+        m_size++;
+        i++;
+    }
     return *this;
 }
 
@@ -179,6 +205,19 @@ inline void Array<T>::erase(size_t index)
         m_data[i] = std::move(m_data[i + 1]);
     }
     m_size--;
+}
+
+template <typename T>
+inline void Array<T>::resize(size_t new_size, const T& value)
+{
+    if (new_size > m_capacity)
+    {
+        reserve(new_size);
+    }
+    for (size_t i = m_size; i < new_size; i++)
+    {
+        m_data[i] = value;
+    }
 }
 
 #endif

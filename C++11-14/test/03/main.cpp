@@ -1,11 +1,14 @@
 #include <iostream>
-#include <string>
 #include "Array.h"
 
 int main()
 {
-    Array<std::string> arr;
-    arr.emplace_back("Hello");
-    std::cout << arr[0] << '\n';
+    Array<int> arr = {1, 2, 3};
+    arr.resize(5);
+    for (auto i : arr)
+    {
+        std::cout << i << ' ';
+    }
+    std::cout.put('\n');
     return 0;
 }
