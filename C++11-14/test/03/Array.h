@@ -24,6 +24,7 @@ class Array
         
         // 以下为运算符重载
         T& operator[](size_t index) { return m_data[index]; }
+        const T& operator[](size_t index) const { return m_data[index]; }
         Array& operator=(const Array& obj);
         bool operator==(const Array& obj) const;
         Array& operator=(Array&& other) noexcept;
@@ -106,7 +107,7 @@ inline Array<T>& Array<T>::push_back(const std::initializer_list<T>& value)
 
     if (!m_data || temp_size + m_size > m_capacity)
     {
-        reserve(temp_size);
+        reserve(temp_size + m_size);
     }
     size_t i = m_size;  // 初始化i为m_size也就是有效元素的下一位
     for (auto& j : value)  // 将value循环一遍并进行拷贝
@@ -190,7 +191,7 @@ inline T& Array<T>::emplace_back(Args&&... args)
     {
         reserve(m_capacity * 2);
     }
-    new(&m_data[m_size]) T(std::forward<T>(args)...);
+    new(&m_data[m_size]) T(std::forward<Args>(args)...);
     m_size++;
     return m_data[m_size - 1];
 }
@@ -215,16 +216,15 @@ inline void Array<T>::resize(size_t new_size, const T& value)
     if (new_size > m_capacity)
     {
         reserve(new_size);
+    }
+    if (new_size > m_size)
+    {
         for (size_t i = m_size; i < new_size; i++)  // 因为如果new_size大于m_capacity那么它就一定比m_size大，所以可以直接增加
         {
             m_data[i] = value;
         }
-        m_size = new_size;
     }
-    else if (new_size < m_size)
-    {
-        m_size = new_size;
-    }
+    m_size = new_size;  // 无论new_size比m_size大或小或等于，最后都让它等于new_size
 }
 
 #endif
