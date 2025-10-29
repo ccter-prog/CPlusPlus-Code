@@ -214,9 +214,12 @@ inline void Array<T>::resize(size_t new_size, const T& value)
     {
         reserve(new_size);
     }
-    for (size_t i = m_size; i < new_size; i++)
+    if (new_size > m_size)
     {
-        m_data[i] = value;
+        for (size_t i = m_size; i < new_size; i++)
+        {
+            m_data[i] = value;
+        }
     }
 }
 
