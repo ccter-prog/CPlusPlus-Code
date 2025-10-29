@@ -97,19 +97,21 @@ inline Array<T>& Array<T>::push_back(const T value)
 template <typename T>
 inline Array<T>& Array<T>::push_back(const std::initializer_list<T>& value)
 {
-    size_t temp_size = 0;
-    for (auto i : value)
-    {
-        temp_size++;
-    }
+    size_t temp_size = value.size();
+
+    // for (auto i : value)  // 循环获取value里面的元素数量
+    // {
+    //     temp_size++;
+    // }
+
     if (!m_data || temp_size + m_size > m_capacity)
     {
         reserve(temp_size);
     }
-    size_t i = m_size;
-    for (auto j : value)
+    size_t i = m_size;  // 初始化i为m_size也就是有效元素的下一位
+    for (auto& j : value)  // 将value循环一遍并进行拷贝
     {
-        m_data[i] = *j;
+        m_data[i] = j;
         m_size++;
         i++;
     }
@@ -213,13 +215,15 @@ inline void Array<T>::resize(size_t new_size, const T& value)
     if (new_size > m_capacity)
     {
         reserve(new_size);
-    }
-    if (new_size > m_size)
-    {
-        for (size_t i = m_size; i < new_size; i++)
+        for (size_t i = m_size; i < new_size; i++)  // 因为如果new_size大于m_capacity那么它就一定比m_size大，所以可以直接增加
         {
             m_data[i] = value;
         }
+        m_size = new_size;
+    }
+    else if (new_size < m_size)
+    {
+        m_size = new_size;
     }
 }
 

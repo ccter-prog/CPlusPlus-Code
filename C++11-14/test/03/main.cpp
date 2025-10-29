@@ -10,5 +10,11 @@ int main()
         std::cout << i << ' ';
     }
     std::cout.put('\n');
+    arr.erase(0);
+    for (auto i : arr)
+    {
+        std::cout << i << ' ';
+    }
+    std::cout.put('\n');
     return 0;
 }
