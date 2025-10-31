@@ -40,9 +40,12 @@ class Array
         const_iterator cbegin() const { return m_data.get(); }
         const_iterator cend() const { return m_data.get() + m_size; }
         void erase(size_t index);
+        iterator erase(iterator position);
         void resize(size_t new_size, const T& value = T());
         Array& push_back(const std::initializer_list<T>& value);
         iterator insert(iterator position, const T& value);
+        void shrink_to_fit();
+        void shrink_to_fit(bool keep_buffer);
     public:
         // 模板函数
         template <typename... Args>
@@ -213,6 +216,21 @@ inline void Array<T>::erase(size_t index)
 }
 
 template <typename T>
+inline typename Array<T>::iterator Array<T>::erase(typename Array<T>::iterator position)
+{
+    if (position < begin() || position >= end())
+    {
+        return nullptr;
+    }
+    for (iterator it = position; it < end(); it++)
+    {
+        *it = std::move(*(it + 1));
+    }
+    m_size--;
+    return position;
+}
+
+template <typename T>
 inline void Array<T>::resize(size_t new_size, const T& value)
 {
     if (new_size > m_capacity)
@@ -232,11 +250,9 @@ inline void Array<T>::resize(size_t new_size, const T& value)
 template <typename T>
 inline typename Array<T>::iterator Array<T>::insert(typename Array<T>::iterator position, const T& value)
 {
-    iterator ret = position;
     if (position < begin() || position > end())
     {
-        ret = nullptr;
-        return ret;
+        return nullptr;
     }
     size_t index = position - begin();
     if (!m_data || m_size == m_capacity)
@@ -253,7 +269,31 @@ inline typename Array<T>::iterator Array<T>::insert(typename Array<T>::iterator 
     }
     *position = value;
     m_size++;
-    return ret;
+    return position;
+}
+
+template <typename T>
+inline void Array<T>::shrink_to_fit()
+{
+    if (m_size)
+    {
+        m_capacity = 1;  // 为了通过reserve的防守机制，最后会被改为m_size的值
+        reserve(m_size);
+    }
+}
+
+template <typename T>
+inline void Array<T>::shrink_to_fit(bool keep_buffer)
+{
+    if (keep_buffer)
+    {
+        size_t new_size = (m_capacity / 2);
+        if (new_size > m_size)
+        {
+            m_capacity = 1;  // 最后会被赋值为new_size
+            reserve(new_size);
+        }
+    }
 }
 
 #endif

@@ -3,13 +3,12 @@
 
 int main()
 {
-    Array<int> arr = {1, 2, 3};
-    Array<int>::iterator pos = arr.begin() + 1;
-    pos = arr.insert(pos, 10);
-    pos = arr.insert(pos, 20);
-    for (size_t i = 0; i < arr.length(); i++)
+    Array<int> arr = {10, 20, 30, 40, 50};
+    Array<int>::iterator it = arr.begin() + 2;
+    arr.erase(it);
+    for (auto i : arr)
     {
-        std::cout << arr[i] << ' ';
+        std::cout << i << ' ';
     }
     std::cout.put('\n');
     return 0;
