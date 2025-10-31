@@ -233,9 +233,10 @@ template <typename T>
 inline typename Array<T>::iterator Array<T>::insert(typename Array<T>::iterator position, const T& value)
 {
     iterator ret = position;
-    if (position < begin() || position >= end())
+    if (position < begin() || position > end())
     {
         ret = nullptr;
+        return ret;
     }
     size_t index = position - begin();
     if (!m_data || m_size == m_capacity)
@@ -251,6 +252,7 @@ inline typename Array<T>::iterator Array<T>::insert(typename Array<T>::iterator 
         }
     }
     *position = value;
+    m_size++;
     return ret;
 }
 
