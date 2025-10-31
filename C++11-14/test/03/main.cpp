@@ -4,16 +4,12 @@
 int main()
 {
     Array<int> arr = {1, 2, 3};
-    arr.resize(5);
-    for (auto i : arr)
+    Array<int>::iterator pos = arr.begin() + 1;
+    pos = arr.insert(pos, 10);
+    pos = arr.insert(pos, 20);
+    for (size_t i = 0; i < arr.length(); i++)
     {
-        std::cout << i << ' ';
-    }
-    std::cout.put('\n');
-    arr.erase(0);
-    for (auto i : arr)
-    {
-        std::cout << i << ' ';
+        std::cout << arr[i] << ' ';
     }
     std::cout.put('\n');
     return 0;

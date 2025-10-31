@@ -5,6 +5,7 @@
 #include <memory>
 #include <utility>
 #include <initializer_list>
+#include <type_traits>
 
 template <typename T>
 class Array
@@ -41,6 +42,7 @@ class Array
         void erase(size_t index);
         void resize(size_t new_size, const T& value = T());
         Array& push_back(const std::initializer_list<T>& value);
+        iterator insert(iterator position, const T& value);
     public:
         // 模板函数
         template <typename... Args>
@@ -225,6 +227,31 @@ inline void Array<T>::resize(size_t new_size, const T& value)
         }
     }
     m_size = new_size;  // 无论new_size比m_size大或小或等于，最后都让它等于new_size
+}
+
+template <typename T>
+inline typename Array<T>::iterator Array<T>::insert(typename Array<T>::iterator position, const T& value)
+{
+    iterator ret = position;
+    if (position < begin() || position >= end())
+    {
+        ret = nullptr;
+    }
+    size_t index = position - begin();
+    if (!m_data || m_size == m_capacity)
+    {
+        reserve(m_capacity * 2);
+        position = begin() + index;
+    }
+    if (index < m_size)  // 如果index比m_size小，说明是在数组中间插入，否则是在数组末尾插入
+    {
+        for (iterator it = end(); it != position; it--)
+        {
+            *it = std::move(*(it - 1));
+        }
+    }
+    *position = value;
+    return ret;
 }
 
 #endif
