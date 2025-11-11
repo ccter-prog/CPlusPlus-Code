@@ -78,12 +78,15 @@ inline Array<T>::Array(Array&& other) noexcept : m_data(std::move(other.m_data))
 template <typename T>
 inline Array<T>& Array<T>::operator=(const Array<T>& obj)
 {
-    m_data.reset();
-    reserve(obj.m_capacity);
-    m_size = obj.m_size;
-    for (size_t i = 0; i < m_size; i++)
+    if (&obj != this)
     {
-        m_data[i] = obj.m_data[i];
+        m_data.reset();
+        reserve(obj.m_capacity);
+        m_size = obj.m_size;
+        for (size_t i = 0; i < m_size; i++)
+        {
+            m_data[i] = obj.m_data[i];
+        }
     }
     return *this;
 }
