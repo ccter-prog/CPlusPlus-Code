@@ -16,4 +16,4 @@ set(WARNING_FLAGS
     -fno-common
 )
 add_compile_options(${WARNING_FLAGS})
-add_executable(main 04-main.cpp)
+add_executable(main 06-main.cpp)
